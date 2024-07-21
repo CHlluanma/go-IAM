@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+// go_package 的值必须是包导入的路径
+option go_package = "./hellogRPC";
+
+// package指定生成的.pd.go文件所在包名，
+package hellogRPC;
+
+// 通过service定义服务
+service Greeter {
+    rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+message HelloRequest {
+    string name = 1;
+}
+
+message HelloReply {
+    string message = 1;
+}
