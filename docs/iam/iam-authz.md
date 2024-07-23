@@ -1,7 +1,7 @@
 ---
 title: IAM认证功能
 date: 2023-03-28 04:24:51
-tags: 
+#tags: 
 ---
 常见的认证方式有4种：基础认证（Basic认证）、摘要认证（Digest认证）、开发授权（OAuth认证）、令牌认证（Bearer认证）。
 
