@@ -20,7 +20,7 @@ package singleton
 
 import "sync"
 
-type singleton struct{}
+type singleton struct {}
 
 var ins *singleton
 var once sync.Once
