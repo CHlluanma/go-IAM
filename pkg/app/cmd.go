@@ -1,4 +1,4 @@
-package cli
+package app
 
 import (
 	"log"
@@ -12,7 +12,7 @@ type Command struct {
 	short string
 	long  string
 
-	flags FlagIntf
+	flags FlagOptions
 
 	subCommand []*Command
 

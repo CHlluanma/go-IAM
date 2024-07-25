@@ -9,15 +9,18 @@ require (
 	github.com/gin-contrib/pprof v1.5.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/google/uuid v1.6.0
+	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/novalagung/gubrak v1.0.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.19.0
 	github.com/zsais/go-gin-prometheus v0.1.0
+	go.uber.org/zap v1.27.0
 	golang.org/x/sync v0.7.0
 	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.25.11
 )
@@ -45,7 +48,6 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.7 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
-	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible // indirect
 	github.com/lestrrat-go/strftime v1.0.6 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
@@ -70,7 +72,6 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
-	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/arch v0.8.0 // indirect
 	golang.org/x/crypto v0.25.0 // indirect
 	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb // indirect
@@ -80,6 +81,5 @@ require (
 	golang.org/x/text v0.16.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240528184218-531527333157 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
-	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
