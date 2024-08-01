@@ -20,3 +20,7 @@ install.swagger:
 .PHONY: install.git-chglog
 install.git-chglog:
 	@$(GO) install github.com/git-chglog/git-chglog/cmd/git-chglog@latest
+
+.PHONY: install.errcodegen
+install.errcodegen:
+	@$(GO) install $(ROOT_DIR)/tools/errcodegen/gen.go

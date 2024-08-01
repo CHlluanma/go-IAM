@@ -1,4 +1,4 @@
-package cli
+package app
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ type App struct {
 	description string
 
 	runFunc RunFunc
-	flags   FlagIntf
+	flags   FlagOptions
 
 	noConfig  bool
 	noVersion bool
@@ -34,7 +34,7 @@ type RunFunc func(app string) error
 
 type Option func(*App)
 
-func WithFlags(fi FlagIntf) Option {
+func WithFlags(fi FlagOptions) Option {
 	return func(app *App) {
 		app.flags = fi
 	}
@@ -70,6 +70,20 @@ func WithCommand(use, short, long string) Option {
 		app.use = use
 		app.short = short
 		app.long = long
+	}
+}
+
+// WithDefaultValidArgs set default valid args to valid non-flag arguments
+func WithDefaultValidArgs() Option {
+	return func(app *App) {
+		app.args = func(cmd *cobra.Command, args []string) error {
+			for _, arg := range args {
+				if len(arg) > 0 {
+					return fmt.Errorf("unknown command %q", arg)
+				}
+			}
+			return nil
+		}
 	}
 }
 
