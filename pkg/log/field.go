@@ -5,6 +5,8 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+type Field = zapcore.Field
+
 const (
 	DebugLevel = zapcore.DebugLevel
 	InfoLevel  = zapcore.InfoLevel

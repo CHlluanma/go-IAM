@@ -1,9 +1,10 @@
 package log
 
 import (
+	"io"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"io"
 )
 
 type LevelEnablerFunc func(level Level) bool
@@ -13,7 +14,7 @@ type TeeOption struct {
 	LevelEnablerFunc
 }
 
-func NewTee(tees []TeeOption, opts ...Option) *ZapLogger {
+func NewTee(tees []TeeOption, opts ...Option) *zapLogger {
 	var cores []zapcore.Core
 	for _, tee := range tees {
 		cfg := zap.NewProductionEncoderConfig()
@@ -25,8 +26,8 @@ func NewTee(tees []TeeOption, opts ...Option) *ZapLogger {
 		)
 		cores = append(cores, core)
 	}
-	return &ZapLogger{
+	return &zapLogger{
 		zapL: zap.New(zapcore.NewTee(cores...), opts...),
-		al:   nil,
+		// al:   nil,
 	}
 }

@@ -3,10 +3,12 @@ package log
 import (
 	"context"
 	"fmt"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 	"io"
 	"os"
+	"sync"
+
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 // InfoLogger 定义了日志信息记录的接口。
@@ -47,7 +49,7 @@ type Logger interface {
 	Write(p []byte) (n int, err error)
 
 	// WithValues 返回一个新的日志记录器，其中包含指定的键值对。
-	WithValues(keysAndValues ...any) error
+	WithValues(keysAndValues ...any) Logger
 
 	// WithName 返回一个新的日志记录器，其中包含指定的名称。
 	WithName(name string) Logger
@@ -56,7 +58,7 @@ type Logger interface {
 	WithContext(ctx context.Context) context.Context
 
 	// Flush 将缓冲区中的日志数据写入输出。
-	Flush()
+	Flush() error
 }
 
 // noopInfoLogger 是一个日志记录器的实现，它不对任何信息进行记录。
@@ -154,78 +156,92 @@ func handleFields(l *zap.Logger, args []interface{}, additional ...zap.Field) []
 
 type Level = zapcore.Level
 
-type ZapLogger struct {
+type zapLogger struct {
 	infoLogger
 	zapL *zap.Logger
-	al   *zap.AtomicLevel
+	// al   *zap.AtomicLevel
 }
 
-func (l *ZapLogger) Debug(msg string, fields ...Field) {
-	l.l.Debug(msg, fields...)
-}
-func (l *ZapLogger) Debugf(format string, v ...any) {
-	//TODO implement me
-	panic("implement me")
+// Enabled implements Logger.
+// Subtle: this method shadows the method (infoLogger).Enabled of zapLogger.infoLogger.
+func (l *zapLogger) Enabled() bool {
+	panic("unimplemented")
 }
 
-func (l *ZapLogger) Debugw(msg string, keysAndValues ...any) {
-	//TODO implement me
-	panic("implement me")
-}
-func (l *ZapLogger) Warn(msg string, fields ...Field) {
-	l.l.Warn(msg, fields...)
-}
-func (l *ZapLogger) Warnf(format string, v ...any) {
-	//TODO implement me
-	panic("implement me")
+// Info implements Logger.
+// Subtle: this method shadows the method (infoLogger).Info of zapLogger.infoLogger.
+func (l *zapLogger) Info(msg string, fields ...zapcore.Field) {
+	l.zapL.Info(msg, fields...)
 }
 
-func (l *ZapLogger) Warnw(msg string, keysAndValues ...any) {
-	//TODO implement me
-	panic("implement me")
+// Infof implements Logger.
+// Subtle: this method shadows the method (infoLogger).Infof of zapLogger.infoLogger.
+func (l *zapLogger) Infof(format string, v ...any) {
+	l.zapL.Sugar().Infof(format, v...)
 }
 
-func (l *ZapLogger) Error(msg string, fields ...Field) {
-	l.l.Error(msg, fields...)
+// Infow implements Logger.
+// Subtle: this method shadows the method (infoLogger).Infow of zapLogger.infoLogger.
+func (l *zapLogger) Infow(msg string, keysAndValues ...any) {
+	l.zapL.Sugar().Infow(msg, keysAndValues...)
 }
 
-func (l *ZapLogger) Errorf(format string, v ...any) {
-	//TODO implement me
-	panic("implement me")
+func (l *zapLogger) Debug(msg string, fields ...Field) {
+	l.zapL.Debug(msg, fields...)
+}
+func (l *zapLogger) Debugf(format string, v ...any) {
+	l.zapL.Sugar().Debugf(format, v...)
 }
 
-func (l *ZapLogger) Errorw(msg string, keysAndValues ...any) {
-	//TODO implement me
-	panic("implement me")
+func (l *zapLogger) Debugw(msg string, keysAndValues ...any) {
+	l.zapL.Sugar().Debugw(msg, keysAndValues...)
 }
-func (l *ZapLogger) Panic(msg string, fields ...Field) {
-	l.l.Panic(msg, fields...)
+func (l *zapLogger) Warn(msg string, fields ...Field) {
+	l.zapL.Warn(msg, fields...)
 }
-
-func (l *ZapLogger) Panicf(format string, v ...any) {
-	//TODO implement me
-	panic("implement me")
+func (l *zapLogger) Warnf(format string, v ...any) {
+	l.zapL.Sugar().Warnf(format, v...)
 }
 
-func (l *ZapLogger) Panicw(msg string, keysAndValues ...any) {
-	//TODO implement me
-	panic("implement me")
-}
-func (l *ZapLogger) Fatal(msg string, fields ...Field) {
-	l.l.Fatal(msg, fields...)
-}
-func (l *ZapLogger) Fatalf(format string, v ...any) {
-	//TODO implement me
-	panic("implement me")
+func (l *zapLogger) Warnw(msg string, keysAndValues ...any) {
+	l.zapL.Sugar().Warnw(msg, keysAndValues...)
 }
 
-func (l *ZapLogger) Fatalw(msg string, keysAndValues ...any) {
-	//TODO implement me
-	panic("implement me")
+func (l *zapLogger) Error(msg string, fields ...Field) {
+	l.zapL.Error(msg, fields...)
+}
+
+func (l *zapLogger) Errorf(format string, v ...any) {
+	l.zapL.Sugar().Errorf(format, v...)
+}
+
+func (l *zapLogger) Errorw(msg string, keysAndValues ...any) {
+	l.zapL.Sugar().Errorw(msg, keysAndValues...)
+}
+func (l *zapLogger) Panic(msg string, fields ...Field) {
+	l.zapL.Panic(msg, fields...)
+}
+
+func (l *zapLogger) Panicf(format string, v ...any) {
+	l.zapL.Sugar().Panicf(format, v...)
+}
+
+func (l *zapLogger) Panicw(msg string, keysAndValues ...any) {
+	l.zapL.Sugar().Panicw(msg, keysAndValues...)
+}
+func (l *zapLogger) Fatal(msg string, fields ...Field) {
+	l.zapL.Fatal(msg, fields...)
+}
+func (l *zapLogger) Fatalf(format string, v ...any) {
+	l.zapL.Sugar().Fatalf(format, v...)
+}
+
+func (l *zapLogger) Fatalw(msg string, keysAndValues ...any) {
+	l.zapL.Sugar().Fatalw(msg, keysAndValues...)
 }
 
 // V 返回一个日志记录器，该记录器仅记录级别大于等于给定级别的日志。
-func (l *ZapLogger) V(level Level) InfoLogger {
+func (l *zapLogger) V(level Level) InfoLogger {
 	if l.zapL.Core().Enabled(level) {
 		return &infoLogger{
 			l:     l.zapL,
@@ -235,27 +251,69 @@ func (l *ZapLogger) V(level Level) InfoLogger {
 	return disableInfoLogger
 }
 
-func (l *ZapLogger) Write(p []byte) (n int, err error) {
-	//TODO implement me
-	panic("implement me")
+// L 从 Context 中取出指定的keyValue， 作为上下文添加到日志输出中
+func (l *zapLogger) L(ctx context.Context) *zapLogger {
+	lg := l.clone()
+
+	if requestID := ctx.Value("requestID"); requestID != nil {
+		lg.zapL = lg.zapL.With(zap.Any("requestID", requestID))
+	}
+	if username := ctx.Value("username"); username != nil {
+		lg.zapL = lg.zapL.With(zap.Any("username", username))
+	}
+	if watcherName := ctx.Value("watcher"); watcherName != nil {
+		lg.zapL = lg.zapL.With(zap.Any("watcher", watcherName))
+	}
+
+	return lg
 }
 
-func (l *ZapLogger) WithValues(keysAndValues ...any) error {
-	//TODO implement me
-	panic("implement me")
+//nolint:predeclared
+func (l *zapLogger) clone() *zapLogger {
+	copy := *l
+
+	return &copy
 }
 
-func (l *ZapLogger) WithName(name string) Logger {
-	//TODO implement me
-	panic("implement me")
+func (l *zapLogger) Write(p []byte) (n int, err error) {
+	l.zapL.Info(string(p))
+
+	return len(p), nil
 }
 
-func (l *ZapLogger) Flush() {
-	//TODO implement me
-	panic("implement me")
+func (l *zapLogger) WithValues(keysAndValues ...any) Logger {
+	newLogger := l.zapL.With(handleFields(l.zapL, keysAndValues)...)
+
+	return NewLoggerWithX(newLogger)
 }
 
-func New(out io.Writer, level Level, opts ...Option) *ZapLogger {
+func (l *zapLogger) WithName(name string) Logger {
+	newLogger := l.zapL.Named(name)
+
+	return NewLoggerWithX(newLogger)
+}
+
+func (l *zapLogger) Flush() error {
+	return l.zapL.Sync()
+}
+
+func (l *zapLogger) Sync() error {
+	return l.zapL.Sync()
+}
+
+// TODO: 设置日志编码器 && 日志写入器
+//func (l *zapLogger) SetEncoder(encoderType LogEncoder) {}
+//func (l *zapLogger) SetWriter() zapcore.WriteSyncer {}
+// func (l *zapLogger) SetLevel(level Level) {
+// 	if l.al != nil {
+// 		l.al.SetLevel(level)
+// 	}
+// }
+
+var _ Logger = &zapLogger{}
+
+// New 函数创建一个新的 zapLogger
+func New(out io.Writer, level Level, opts ...Option) *zapLogger {
 	if out == nil {
 		out = os.Stdout
 	}
@@ -269,64 +327,131 @@ func New(out io.Writer, level Level, opts ...Option) *ZapLogger {
 		zapcore.AddSync(out),
 		al,
 	)
-	return &ZapLogger{
+	return &zapLogger{
 		zapL: zap.New(core, opts...),
-		al:   &al,
+		// al:   &al,
 	}
 }
 
-// todo: 设置日志编码器 && 日志写入器
-//func (l *ZapLogger) SetEncoder(encoderType LogEncoder) {}
-//func (l *ZapLogger) SetWriter() zapcore.WriteSyncer {}
-
-func (l *ZapLogger) SetLevel(level Level) {
-	if l.al != nil {
-		l.al.SetLevel(level)
+func NewLoggerWithX(l *zap.Logger) Logger {
+	return &zapLogger{
+		zapL: l,
+		infoLogger: infoLogger{
+			l:     l,
+			level: InfoLevel,
+		},
 	}
 }
 
-type Field = zapcore.Field
-
-func (l *ZapLogger) Sync() error {
-	return l.l.Sync()
+func ZapLogger() *zap.Logger {
+	return std.zapL
 }
 
-var std = New(os.Stderr, InfoLevel)
+var (
+	std = New(os.Stderr, InfoLevel)
+	mu  sync.Mutex
+)
 
-func Default() *ZapLogger {
+func Default() *zapLogger {
 	return std
 }
 
-func ReplaceDefault(l *ZapLogger) {
+func ReplaceDefault(l *zapLogger) {
 	std = l
 }
 
-func SetLevel(level Level) {
-	std.SetLevel(level)
-}
+// func SetLevel(level Level) {
+// 	std.SetLevel(level)
+// }
+
 func Info(msg string, fields ...Field) {
 	std.Info(msg, fields...)
 }
+
+func Infof(format string, v ...any) {
+	std.Infof(format, v...)
+}
+
+func Infow(msg string, keysAndValues ...any) {
+	std.Infow(msg, keysAndValues...)
+}
+
 func Debug(msg string, fields ...Field) {
 	std.Debug(msg, fields...)
+}
+
+func Debugf(format string, v ...any) {
+	std.Debugf(format, v...)
+}
+
+func Debugw(msg string, keysAndValues ...any) {
+	std.Debugw(msg, keysAndValues...)
 }
 
 func Warn(msg string, fields ...Field) {
 	std.Warn(msg, fields...)
 }
+
+func Warnf(format string, v ...any) {
+	std.Warnf(format, v...)
+}
+
+func Warnw(msg string, keysAndValues ...any) {
+	std.Warnw(msg, keysAndValues...)
+}
+
 func Error(msg string, fields ...Field) {
 	std.Error(msg, fields...)
 }
+
+func Errorf(format string, v ...any) {
+	std.Errorf(format, v...)
+}
+
+func Errorw(msg string, keysAndValues ...any) {
+	std.Errorw(msg, keysAndValues...)
+}
+
 func Panic(msg string, fields ...Field) {
 	std.Panic(msg, fields...)
 }
+
+func Panicf(format string, v ...any) {
+	std.Panicf(format, v...)
+}
+
+func Panicw(msg string, keysAndValues ...any) {
+	std.Panicw(msg, keysAndValues...)
+}
+
 func Fatal(msg string, fields ...Field) {
 	std.Fatal(msg, fields...)
 }
-func Sync() error {
-	return std.Sync()
+
+func Fatalf(format string, v ...any) {
+	std.Fatalf(format, v...)
+}
+
+func Fatalw(msg string, keysAndValues ...any) {
+	std.Fatalw(msg, keysAndValues...)
+}
+
+func Flush() error {
+	return std.Flush()
 }
 
 func WithName(s string) Logger {
 	return std.WithName(s)
+}
+
+func WithValues(keysAndValues ...any) Logger {
+	return std.WithValues(keysAndValues...)
+}
+
+func V(level Level) InfoLogger {
+	return std.V(level)
+}
+
+func L(ctx context.Context) Logger {
+	return std.L(ctx)
 }
