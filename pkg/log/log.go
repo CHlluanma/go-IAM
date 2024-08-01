@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"sync"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -157,9 +156,9 @@ func handleFields(l *zap.Logger, args []interface{}, additional ...zap.Field) []
 type Level = zapcore.Level
 
 type zapLogger struct {
-	infoLogger
+	// infoLogger
 	zapL *zap.Logger
-	// al   *zap.AtomicLevel
+	al   *zap.AtomicLevel
 }
 
 // Enabled implements Logger.
@@ -284,13 +283,13 @@ func (l *zapLogger) Write(p []byte) (n int, err error) {
 func (l *zapLogger) WithValues(keysAndValues ...any) Logger {
 	newLogger := l.zapL.With(handleFields(l.zapL, keysAndValues)...)
 
-	return NewLoggerWithX(newLogger)
+	return newLoggerWithX(newLogger)
 }
 
 func (l *zapLogger) WithName(name string) Logger {
 	newLogger := l.zapL.Named(name)
 
-	return NewLoggerWithX(newLogger)
+	return newLoggerWithX(newLogger)
 }
 
 func (l *zapLogger) Flush() error {
@@ -302,13 +301,14 @@ func (l *zapLogger) Sync() error {
 }
 
 // TODO: 设置日志编码器 && 日志写入器
-//func (l *zapLogger) SetEncoder(encoderType LogEncoder) {}
-//func (l *zapLogger) SetWriter() zapcore.WriteSyncer {}
-// func (l *zapLogger) SetLevel(level Level) {
-// 	if l.al != nil {
-// 		l.al.SetLevel(level)
-// 	}
-// }
+// func (l *zapLogger) SetEncoder(encoderType LogEncoder) {}
+// func (l *zapLogger) SetWriter() zapcore.WriteSyncer {}
+
+func (l *zapLogger) SetLevel(level Level) {
+	if l.al != nil {
+		l.al.SetLevel(level)
+	}
+}
 
 var _ Logger = &zapLogger{}
 
@@ -329,17 +329,17 @@ func New(out io.Writer, level Level, opts ...Option) *zapLogger {
 	)
 	return &zapLogger{
 		zapL: zap.New(core, opts...),
-		// al:   &al,
+		al:   &al,
 	}
 }
 
-func NewLoggerWithX(l *zap.Logger) Logger {
+func newLoggerWithX(l *zap.Logger) Logger {
 	return &zapLogger{
 		zapL: l,
-		infoLogger: infoLogger{
-			l:     l,
-			level: InfoLevel,
-		},
+		// infoLogger: infoLogger{
+		// 	l:     l,
+		// 	level: InfoLevel,
+		// },
 	}
 }
 
@@ -349,7 +349,7 @@ func ZapLogger() *zap.Logger {
 
 var (
 	std = New(os.Stderr, InfoLevel)
-	mu  sync.Mutex
+	// mu  sync.Mutex
 )
 
 func Default() *zapLogger {
@@ -363,6 +363,24 @@ func ReplaceDefault(l *zapLogger) {
 // func SetLevel(level Level) {
 // 	std.SetLevel(level)
 // }
+
+// CheckInternal 函数根据传入的级别值，检查当前 logger 是否能够记录该级别的日志
+func CheckInternal(level int32) bool {
+	var lvl Level
+	if level < 5 {
+		// 如果级别小于 5，则将级别设置为 InfoLevel，意味着将记录 Info、Warn、Error 和 DPanic 级别的日志
+		lvl = zap.InfoLevel
+	} else {
+		// 如果级别大于或等于 5，则将级别设置为 DebugLevel，意味着将记录 Debug、Info、Warn、Error 和 DPanic 级别的日志
+		lvl = zap.DebugLevel
+	}
+
+	// 使用转换后的级别，检查当前的 zapLogger 实例是否能够记录该级别的日志
+	checkEntry := std.zapL.Check(lvl, "")
+
+	// 如果检查结果不为空，则返回 true，表示可以记录日志
+	return checkEntry != nil
+}
 
 func Info(msg string, fields ...Field) {
 	std.Info(msg, fields...)
