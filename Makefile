@@ -3,8 +3,6 @@
 .PHONY: all
 all: tidy
 
-ROOT_DIR := $(shell pwd)
-
 include scripts/make-rules/common.mk
 include scripts/make-rules/golang.mk
 include scripts/make-rules/tools.mk
