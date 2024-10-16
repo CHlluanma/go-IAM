@@ -33,7 +33,7 @@ func TestLog_std(t *testing.T) {
 	// Panicw("Message printed with panicw", "X-Request-ID", "fbf54504-64da-4088-9b86-67824a7fb508")
 
 	// faltal log
-	// Fatal("This is a faltal message", String("key1", "value1"))
+	Fatal("This is a faltal message", String("key1", "value1"))
 	// Fatalf("This is a formatted %s message", "faltal")
 	// Fatalw("Message printed with faltalw", "X-Request-ID", "fbf54504-64da-4088-9b86-67824a7fb508")
 }

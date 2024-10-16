@@ -1,14 +1,15 @@
 package options
 
 import (
+	"time"
+
 	"github.com/ahang7/go-IAM/pkg/db"
 	"github.com/spf13/pflag"
 	"gorm.io/gorm"
-	"time"
 )
 
 type MySQLOptions struct {
-	Host                  string        `json:"host" mapstructure:"host"`
+	Host                  string        `json:"host" yaml:"host" mapstructure:"host"`
 	Username              string        `json:"username" mapstructure:"username"`
 	Password              string        `json:"password" mapstructure:"password"`
 	Database              string        `json:"database" mapstructure:"database"`

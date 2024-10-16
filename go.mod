@@ -1,9 +1,8 @@
 module github.com/ahang7/go-IAM
 
-go 1.22.5
+go 1.23.2
 
 require (
-	github.com/ahang7/go-sdk v0.0.0-20240718181024-7c3f732c6081
 	github.com/appleboy/gin-jwt/v2 v2.9.2
 	github.com/fatih/color v1.17.0
 	github.com/gin-contrib/pprof v1.5.0
@@ -45,6 +44,7 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/jonboulle/clockwork v0.4.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.7 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect

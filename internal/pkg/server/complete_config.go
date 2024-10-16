@@ -1,11 +1,12 @@
 package server
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 )
 
 // CompletedConfig 用以表示配置已经完成

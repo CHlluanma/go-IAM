@@ -20,7 +20,7 @@ type FlagsIntf interface {
 }
 
 // FlagOptions 命令行读取配置
-type FlagOptions interface {
+type FlagsOptions interface {
 	// Flags 添加命令行
 	Flags() (fs FlagSet)
 	// Validate 验证
@@ -44,7 +44,7 @@ type PrintableOptions interface {
 
 // OptionsIntf 提供Options接口，定义Options的具体实现
 type OptionsIntf interface {
-	FlagOptions
+	FlagsOptions
 	ConfigurableOptions
 	CompletableOptions
 	PrintableOptions

@@ -2,13 +2,14 @@ package app
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
+
+	"github.com/ahang7/go-IAM/pkg/log"
 )
 
 type App struct {
@@ -17,7 +18,7 @@ type App struct {
 	description string
 
 	runFunc RunFunc
-	flags   FlagOptions
+	flags   FlagsOptions
 
 	noConfig  bool
 	noVersion bool
@@ -34,7 +35,7 @@ type RunFunc func(app string) error
 
 type Option func(*App)
 
-func WithFlags(fi FlagOptions) Option {
+func WithFlags(fi FlagsOptions) Option {
 	return func(app *App) {
 		app.flags = fi
 	}
@@ -46,9 +47,9 @@ func WithDescription(desc string) Option {
 	}
 }
 
-func WithConfig(noConfig bool) Option {
+func WithNoConfig() Option {
 	return func(app *App) {
-		app.noConfig = noConfig
+		app.noConfig = true
 	}
 }
 
@@ -163,8 +164,9 @@ func (a *App) Run() {
 }
 
 func (a *App) run(cmd *cobra.Command, args []string) error {
+	printWorkingDir()
 	cmd.Flags().VisitAll(func(flag *pflag.Flag) {
-		log.Println("cmd visitAll flag")
+		log.Debugf("flag %s: %v", flag.Name, flag.Value)
 	})
 	// todo: 输出 --version
 
@@ -181,4 +183,9 @@ func (a *App) run(cmd *cobra.Command, args []string) error {
 		return a.runFunc(a.appname)
 	}
 	return nil
+}
+
+func printWorkingDir() {
+	wd, _ := os.Getwd()
+	log.Infof("%v working dir: %s", color.GreenString("===>"), wd)
 }

@@ -4,7 +4,7 @@ import (
 	"github.com/ahang7/go-IAM/internal/pkg/code"
 	"github.com/ahang7/go-IAM/internal/pkg/middleware/auth"
 	httpcore "github.com/ahang7/go-IAM/pkg/core/http"
-	"github.com/ahang7/go-sdk/errors"
+	"github.com/ahang7/go-IAM/pkg/errors"
 	"github.com/gin-gonic/gin"
 )
 
