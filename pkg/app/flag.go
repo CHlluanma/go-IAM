@@ -1,8 +1,9 @@
 package app
 
 import (
-	"github.com/spf13/pflag"
 	"strings"
+
+	"github.com/spf13/pflag"
 )
 
 func normalizeFunc(f *pflag.FlagSet, name string) pflag.NormalizedName {

@@ -12,7 +12,7 @@ type Command struct {
 	short string
 	long  string
 
-	flags FlagOptions
+	flags FlagsOptions
 
 	subCommand []*Command
 

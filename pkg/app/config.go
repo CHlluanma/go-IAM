@@ -1,13 +1,14 @@
 package app
 
 import (
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
-	"github.com/spf13/viper"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/ahang7/go-IAM/pkg/log"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 )
 
 const (
@@ -30,7 +31,6 @@ func addConfigFile(prefixFlag string, configName string, fs *pflag.FlagSet) {
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
 
 	cobra.OnInitialize(func() {
-		log.Println("init viper")
 		if configFlagFile != "" {
 			viper.SetConfigFile(configFlagFile)
 		} else {
@@ -46,7 +46,8 @@ func addConfigFile(prefixFlag string, configName string, fs *pflag.FlagSet) {
 		}
 		viper.SetConfigType(configFileType)
 		if err := viper.ReadInConfig(); err != nil {
-			log.Fatal("viper read config failed")
+			log.Fatalf("viper read config failed, err: %v", err)
+			os.Exit(1)
 		}
 	})
 }

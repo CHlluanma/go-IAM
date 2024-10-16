@@ -1,10 +1,11 @@
 package server
 
 import (
-	"github.com/gin-gonic/gin"
 	"net"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Config 用于配置genericServer的配置.
