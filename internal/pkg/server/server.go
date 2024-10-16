@@ -4,15 +4,16 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
+	"net/http"
+	"strings"
+	"time"
+
 	"github.com/ahang7/go-IAM/internal/pkg/middleware"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	ginprometheus "github.com/zsais/go-gin-prometheus"
 	"golang.org/x/sync/errgroup"
-	"log"
-	"net/http"
-	"strings"
-	"time"
 )
 
 type GenericServer struct {

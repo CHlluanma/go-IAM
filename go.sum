@@ -1,7 +1,5 @@
 github.com/DefinitelyMod/gocsv v0.0.0-20181205141819-acfa5f112b45 h1:+OD9vawobD89HK04zwMokunBCSEeAb08VWAHPUMg+UE=
 github.com/DefinitelyMod/gocsv v0.0.0-20181205141819-acfa5f112b45/go.mod h1:+nlrAh0au59iC1KN5RA1h1NdiOQYlNOBrbtE1Plqht4=
-github.com/ahang7/go-sdk v0.0.0-20240718181024-7c3f732c6081 h1:ekiGm4a9R+pd3Zw6w45ptHztTWxbd+ssOnX7/olyoAw=
-github.com/ahang7/go-sdk v0.0.0-20240718181024-7c3f732c6081/go.mod h1:Q3thToJMneKHXX2dsCiEYp9yFuqdlOq7BycJVNxNqiM=
 github.com/appleboy/gin-jwt/v2 v2.9.2 h1:GeS3lm9mb9HMmj7+GNjYUtpp3V1DAQ1TkUFa5poiZ7Y=
 github.com/appleboy/gin-jwt/v2 v2.9.2/go.mod h1:mxGjKt9Lrx9Xusy1SrnmsCJMZG6UJwmdHN9bN27/QDw=
 github.com/appleboy/gofight/v2 v2.1.2 h1:VOy3jow4vIK8BRQJoC/I9muxyYlJ2yb9ht2hZoS3rf4=

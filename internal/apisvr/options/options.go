@@ -1,33 +1,39 @@
 package options
 
 import (
+	"encoding/json"
+
 	pkgoptions "github.com/ahang7/go-IAM/internal/pkg/options"
 	"github.com/ahang7/go-IAM/pkg/app"
 )
 
 type Options struct {
-	MySQLOpts *pkgoptions.MySQLOptions `json:"mysql" mapstructure:"mysql"`
+	GenericServerRunOptions *pkgoptions.ServerRunOptions `json:"server" mapstructure:"server"`
+	MySQLOpts               *pkgoptions.MySQLOptions     `json:"mysql" mapstructure:"mysql"`
 }
 
 func (o *Options) Complete() error {
-	//TODO implement me
-	panic("implement me")
+
+	return nil
 }
 
 func (o *Options) String() string {
-	//TODO implement me
-	panic("implement me")
+	data, _ := json.Marshal(o)
+
+	return string(data)
 }
 
 func (o *Options) ApplyFlags() []error {
-	//TODO implement me
-	panic("implement me")
+	return nil
 }
 
 func (o *Options) Flags() (fs app.FlagSet) {
-	//TODO implement me
-	panic("implement me")
+	o.MySQLOpts.AddFlags(fs.Flags("mysql"))
+
+	return
 }
+
+var _ app.OptionsIntf = (*Options)(nil)
 
 func NewOptions() *Options {
 	o := &Options{

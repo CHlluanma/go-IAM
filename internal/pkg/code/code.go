@@ -1,6 +1,8 @@
 package code
 
 import (
+	"net/http"
+
 	"github.com/ahang7/go-IAM/pkg/errors"
 	"github.com/novalagung/gubrak"
 )
@@ -14,13 +16,15 @@ type ErrCode struct {
 
 // Code implements errors.Coder.
 func (c *ErrCode) Code() int {
-	return c.HTTP
+	return c.C
 }
 
 // HTTPStatus implements errors.Coder.
 func (c *ErrCode) HTTPStatus() int {
+	if c.HTTP == 0 {
+		return http.StatusInternalServerError
+	}
 	return c.HTTP
-
 }
 
 // Reference implements errors.Coder.
@@ -38,7 +42,7 @@ func (c *ErrCode) String() string {
 var _ errors.Coder = (*ErrCode)(nil)
 
 func register(code int, httpStatus int, message string, refs ...string) {
-	found, _ := gubrak.Includes([]int{200, 400, 401, 404, 500}, httpStatus)
+	found, _ := gubrak.Includes([]int{200, 400, 401, 403, 404, 500}, httpStatus)
 	if !found {
 		panic("http status code must be 200, 400, 401, 404, 500")
 	}

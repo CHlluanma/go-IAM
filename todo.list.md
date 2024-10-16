@@ -9,3 +9,4 @@
   - 使用golangci-lint做静态代码检查
 - 引入代码生成工具
 - 使用Makefile管理项目
+- 优化log日志

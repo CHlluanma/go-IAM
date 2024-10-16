@@ -2,9 +2,10 @@ package db
 
 import (
 	"fmt"
+	"time"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"time"
 )
 
 type MySQLOptions struct {
