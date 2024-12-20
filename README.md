@@ -1,4 +1,4 @@
-# go-IAM
+# go-IAM -> 重构于 🔗[go-iam](https://github.com/chhz0/goiam)
 > 本项目学习自[IAM](https://github.com/marmotedu/iam)
 
 
